@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.902
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThPatchConfig", "ThPatchConfig\ThPatchConfig.csproj", "{7CCCA16A-96B0-4B45-BAA9-6B4DD1BC4F98}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7CCCA16A-96B0-4B45-BAA9-6B4DD1BC4F98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CCCA16A-96B0-4B45-BAA9-6B4DD1BC4F98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CCCA16A-96B0-4B45-BAA9-6B4DD1BC4F98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CCCA16A-96B0-4B45-BAA9-6B4DD1BC4F98}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2EFDD8DC-E331-46CE-9F89-E2AABD59D1EA}
+	EndGlobalSection
+EndGlobal
