@@ -34,6 +34,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabLauncher = new System.Windows.Forms.TabPage();
+            this.remGame = new System.Windows.Forms.Button();
+            this.scanGame = new System.Windows.Forms.Button();
+            this.addGame = new System.Windows.Forms.Button();
             this.gameListView = new System.Windows.Forms.ListView();
             this.launcherImageList = new System.Windows.Forms.ImageList(this.components);
             this.tabConfig = new System.Windows.Forms.TabPage();
@@ -80,9 +83,7 @@
             this.patchesImageList = new System.Windows.Forms.ImageList(this.components);
             this.repoMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.dlAll = new System.Windows.Forms.ToolStripMenuItem();
-            this.addGame = new System.Windows.Forms.Button();
-            this.scanGame = new System.Windows.Forms.Button();
-            this.remGame = new System.Windows.Forms.Button();
+            this.changeWorkingDir = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabLauncher.SuspendLayout();
             this.tabConfig.SuspendLayout();
@@ -124,6 +125,36 @@
             this.tabLauncher.Size = new System.Drawing.Size(709, 564);
             this.tabLauncher.TabIndex = 0;
             this.tabLauncher.Text = "Launcher";
+            // 
+            // remGame
+            // 
+            this.remGame.Location = new System.Drawing.Point(249, 515);
+            this.remGame.Name = "remGame";
+            this.remGame.Size = new System.Drawing.Size(210, 46);
+            this.remGame.TabIndex = 3;
+            this.remGame.Text = "Remove Game";
+            this.remGame.UseVisualStyleBackColor = true;
+            this.remGame.Click += new System.EventHandler(this.remGame_Click);
+            // 
+            // scanGame
+            // 
+            this.scanGame.Location = new System.Drawing.Point(496, 515);
+            this.scanGame.Name = "scanGame";
+            this.scanGame.Size = new System.Drawing.Size(210, 46);
+            this.scanGame.TabIndex = 2;
+            this.scanGame.Text = "Scan for Games";
+            this.scanGame.UseVisualStyleBackColor = true;
+            this.scanGame.Click += new System.EventHandler(this.scanGame_Click);
+            // 
+            // addGame
+            // 
+            this.addGame.Location = new System.Drawing.Point(3, 515);
+            this.addGame.Name = "addGame";
+            this.addGame.Size = new System.Drawing.Size(210, 46);
+            this.addGame.TabIndex = 1;
+            this.addGame.Text = "Add Game";
+            this.addGame.UseVisualStyleBackColor = true;
+            this.addGame.Click += new System.EventHandler(this.addGame_Click);
             // 
             // gameListView
             // 
@@ -520,6 +551,7 @@
             // 
             // tabSettings
             // 
+            this.tabSettings.Controls.Add(this.changeWorkingDir);
             this.tabSettings.Controls.Add(this.timeBtwUpd);
             this.tabSettings.Controls.Add(this.label5);
             this.tabSettings.Controls.Add(this.updOther);
@@ -621,35 +653,15 @@
             this.dlAll.Text = "Download All Patches";
             this.dlAll.Click += new System.EventHandler(this.dlAll_Click);
             // 
-            // addGame
+            // changeWorkingDir
             // 
-            this.addGame.Location = new System.Drawing.Point(3, 515);
-            this.addGame.Name = "addGame";
-            this.addGame.Size = new System.Drawing.Size(210, 46);
-            this.addGame.TabIndex = 1;
-            this.addGame.Text = "Add Game";
-            this.addGame.UseVisualStyleBackColor = true;
-            this.addGame.Click += new System.EventHandler(this.addGame_Click);
-            // 
-            // scanGame
-            // 
-            this.scanGame.Location = new System.Drawing.Point(496, 515);
-            this.scanGame.Name = "scanGame";
-            this.scanGame.Size = new System.Drawing.Size(210, 46);
-            this.scanGame.TabIndex = 2;
-            this.scanGame.Text = "Scan for Games";
-            this.scanGame.UseVisualStyleBackColor = true;
-            this.scanGame.Click += new System.EventHandler(this.scanGame_Click);
-            // 
-            // remGame
-            // 
-            this.remGame.Location = new System.Drawing.Point(249, 515);
-            this.remGame.Name = "remGame";
-            this.remGame.Size = new System.Drawing.Size(210, 46);
-            this.remGame.TabIndex = 3;
-            this.remGame.Text = "Remove Game";
-            this.remGame.UseVisualStyleBackColor = true;
-            this.remGame.Click += new System.EventHandler(this.remGame_Click);
+            this.changeWorkingDir.Location = new System.Drawing.Point(269, 200);
+            this.changeWorkingDir.Name = "changeWorkingDir";
+            this.changeWorkingDir.Size = new System.Drawing.Size(163, 41);
+            this.changeWorkingDir.TabIndex = 7;
+            this.changeWorkingDir.Text = "Change Thcrap Directory";
+            this.changeWorkingDir.UseVisualStyleBackColor = true;
+            this.changeWorkingDir.Click += new System.EventHandler(this.changeWorkingDir_Click);
             // 
             // MainForm
             // 
@@ -737,6 +749,7 @@
         private System.Windows.Forms.Button remGame;
         private System.Windows.Forms.Button scanGame;
         private System.Windows.Forms.Button addGame;
+        private System.Windows.Forms.Button changeWorkingDir;
     }
 }
 

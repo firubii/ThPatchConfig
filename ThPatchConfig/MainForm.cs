@@ -66,18 +66,18 @@ namespace ThPatchConfig
         List<PatchConfig> configs;
         Dictionary<string, string> games;
         ProgressWindow progress;
-        string exeDir;
+        string workingDir;
 
         List<string> parsedRepos;
 
-        public MainForm()
+        public MainForm(string dir)
         {
             repos = new List<Repository>();
             configs = new List<PatchConfig>();
             games = new Dictionary<string, string>();
             parsedRepos = new List<string>();
             progress = new ProgressWindow();
-            exeDir = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            workingDir = dir;
             InitializeComponent();
 
             tabControl1_Selected(null, new TabControlEventArgs(tabControl1.TabPages[0], 0, TabControlAction.Selected));
@@ -107,10 +107,10 @@ namespace ThPatchConfig
                 r.Contact = json["contact"].Value<string>();
                 r.Id = json["id"].Value<string>();
 
-                if (!Directory.Exists(exeDir + "\\repos\\" + r.Id))
-                    Directory.CreateDirectory(exeDir + "\\repos\\" + r.Id);
-                if (!File.Exists(exeDir + "\\repos\\" + r.Id + "\\repo.js"))
-                    File.WriteAllText(exeDir + "\\repos\\" + r.Id + "\\repo.js", repoJson);
+                if (!Directory.Exists(workingDir + "\\repos\\" + r.Id))
+                    Directory.CreateDirectory(workingDir + "\\repos\\" + r.Id);
+                if (!File.Exists(workingDir + "\\repos\\" + r.Id + "\\repo.js"))
+                    File.WriteAllText(workingDir + "\\repos\\" + r.Id + "\\repo.js", repoJson);
 
                 List<string> neighbors = new List<string>();
                 if (json.ContainsKey("neighbors"))
@@ -211,10 +211,10 @@ namespace ThPatchConfig
                 if (json.ContainsKey("update"))
                     p.Update = json["update"].Value<bool>();
                 
-                if (!Directory.Exists(exeDir + "\\repos\\" + repo.Id + "\\" + patchId))
-                    Directory.CreateDirectory(exeDir + "\\repos\\" + repo.Id + "\\" + patchId);
-                if (!File.Exists(exeDir + "\\repos\\" + repo.Id + "\\" + patchId + "\\patch.js"))
-                    File.WriteAllText(exeDir + "\\repos\\" + repo.Id + "\\" + patchId + "\\patch.js", patchJson);
+                if (!Directory.Exists(workingDir + "\\repos\\" + repo.Id + "\\" + patchId))
+                    Directory.CreateDirectory(workingDir + "\\repos\\" + repo.Id + "\\" + patchId);
+                if (!File.Exists(workingDir + "\\repos\\" + repo.Id + "\\" + patchId + "\\patch.js"))
+                    File.WriteAllText(workingDir + "\\repos\\" + repo.Id + "\\" + patchId + "\\patch.js", patchJson);
 
                 List<string> depends = new List<string>();
                 if (json.ContainsKey("dependencies"))
@@ -278,7 +278,7 @@ namespace ThPatchConfig
                 try { json = JObject.Parse(filesJson); }
                 catch { MessageBox.Show($"Error: Could not parse files.js of repository at \"{p.Servers[0]}\".", this.Text, MessageBoxButtons.OK); return; }
 
-                string patchDir = exeDir + "\\repos\\" + repo.Id + "\\" + patchId;
+                string patchDir = workingDir + "\\repos\\" + repo.Id + "\\" + patchId;
                 if (!Directory.Exists(patchDir))
                     Directory.CreateDirectory(patchDir);
                 if (!File.Exists(patchDir + "\\files.js"))
@@ -351,9 +351,9 @@ namespace ThPatchConfig
         void LoadConfigs()
         {
             configs.Clear();
-            if (Directory.Exists(exeDir + "\\config"))
+            if (Directory.Exists(workingDir + "\\config"))
             {
-                string[] files = Directory.GetFiles(exeDir + "\\config", "*.js");
+                string[] files = Directory.GetFiles(workingDir + "\\config", "*.js");
                 for (int i = 0; i < files.Length; i++)
                 {
                     if (Path.GetFileName(files[i]) == "config.js" || Path.GetFileName(files[i]) == "games.js")
@@ -406,7 +406,7 @@ namespace ThPatchConfig
             }
             json.Add("patches", patches);
             
-            using (StreamWriter writer = new StreamWriter(exeDir + "\\config\\" + config.Name + ".js"))
+            using (StreamWriter writer = new StreamWriter(workingDir + "\\config\\" + config.Name + ".js"))
             {
                 using (JsonTextWriter jsonWriter = new JsonTextWriter(writer))
                 {
@@ -435,9 +435,9 @@ namespace ThPatchConfig
         void LoadGames()
         {
             games.Clear();
-            if (File.Exists(exeDir + "\\config\\games.js"))
+            if (File.Exists(workingDir + "\\config\\games.js"))
             {
-                JObject json = JObject.Parse(File.ReadAllText(exeDir + "\\config\\games.js"));
+                JObject json = JObject.Parse(File.ReadAllText(workingDir + "\\config\\games.js"));
                 foreach (JProperty prop in json.Children<JProperty>())
                 {
                     games.Add(prop.Name, (string)prop.Value);
@@ -455,7 +455,7 @@ namespace ThPatchConfig
                 json.Add(pair.Key, pair.Value);
             }
 
-            using (StreamWriter writer = new StreamWriter(exeDir + "\\config\\games.js"))
+            using (StreamWriter writer = new StreamWriter(workingDir + "\\config\\games.js"))
             {
                 using (JsonTextWriter jsonWriter = new JsonTextWriter(writer))
                 {
@@ -505,9 +505,9 @@ namespace ThPatchConfig
 
         void UpdateThpatchSettings()
         {
-            if (File.Exists(exeDir + "\\config\\config.js"))
+            if (File.Exists(workingDir + "\\config\\config.js"))
             {
-                JObject json = JObject.Parse(File.ReadAllText(exeDir + "\\config\\config.js"));
+                JObject json = JObject.Parse(File.ReadAllText(workingDir + "\\config\\config.js"));
                 bgUpd.Checked = json["background_updates"].Value<bool>();
                 skipCheckMbox.Checked = json["skip_check_mbox"].Value<bool>();
                 timeBtwUpd.Value = json["time_between_updates"].Value<int>();
@@ -525,7 +525,7 @@ namespace ThPatchConfig
             json.Add("update_at_exit", JToken.FromObject(updAtExit.Checked));
             json.Add("update_others", JToken.FromObject(updOther.Checked));
 
-            using (StreamWriter writer = new StreamWriter(exeDir + "\\config\\config.js"))
+            using (StreamWriter writer = new StreamWriter(workingDir + "\\config\\config.js"))
             {
                 using (JsonTextWriter jsonWriter = new JsonTextWriter(writer))
                 {
@@ -643,7 +643,7 @@ namespace ThPatchConfig
 
         private void addPatch_Click(object sender, EventArgs e)
         {
-            PatchPicker patchPicker = new PatchPicker(exeDir);
+            PatchPicker patchPicker = new PatchPicker(workingDir);
             if (patchPicker.ShowDialog() == DialogResult.OK)
             {
                 PatchConfig c = configs[configList.SelectedIndex];
@@ -731,7 +731,7 @@ namespace ThPatchConfig
 
             if (MessageBox.Show($"Are you sure you want to delete {configs[index].Name}?\nThis cannot be undone.", this.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                File.Delete(exeDir + "\\config\\" + configs[index].Name + ".js");
+                File.Delete(workingDir + "\\config\\" + configs[index].Name + ".js");
                 configs.RemoveAt(index);
 
                 UpdateConfigList();
@@ -750,7 +750,7 @@ namespace ThPatchConfig
             RenameWindow rename = new RenameWindow(c.Name);
             if (rename.ShowDialog() == DialogResult.OK)
             {
-                File.Move(exeDir + "\\config\\" + c.Name + ".js", exeDir + "\\config\\" + rename.newName + ".js");
+                File.Move(workingDir + "\\config\\" + c.Name + ".js", workingDir + "\\config\\" + rename.newName + ".js");
                 c.Name = rename.newName;
 
                 configs[index] = c;
@@ -811,12 +811,12 @@ namespace ThPatchConfig
             {
                 configNames.Add(configs[i].Name);
             }
-            ConfigPicker configSel = new ConfigPicker(exeDir + "\\config");
+            ConfigPicker configSel = new ConfigPicker(workingDir + "\\config");
             if (configSel.ShowDialog() == DialogResult.OK)
             {
                 if (configSel.config != "(None)")
                 {
-                    Process.Start(exeDir + "\\thcrap_loader.exe", $"\"{configSel.config}.js\" \"{games.Keys.ElementAt(index)}\"");
+                    Process.Start(workingDir + "\\thcrap_loader.exe", $"\"{configSel.config}.js\" \"{games.Keys.ElementAt(index)}\"");
                 }
                 else
                 {
@@ -830,7 +830,7 @@ namespace ThPatchConfig
             OpenFileDialog open = new OpenFileDialog();
             open.Title = "Select Touhou game or custom executable";
             open.Filter = "Executable Files|*.exe";
-            open.InitialDirectory = Path.GetDirectoryName(exeDir);
+            open.InitialDirectory = Path.GetDirectoryName(workingDir);
             open.CheckFileExists = true;
             if (open.ShowDialog() == DialogResult.OK)
             {
@@ -877,7 +877,7 @@ namespace ThPatchConfig
         private void scanGame_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog open = new FolderBrowserDialog();
-            open.SelectedPath = exeDir;
+            open.SelectedPath = workingDir;
             open.ShowNewFolderButton = false;
             open.Description = "Select folder to scan from";
             if (open.ShowDialog() == DialogResult.OK)
@@ -889,22 +889,22 @@ namespace ThPatchConfig
                 //Will check files.js later I'm not up for doing that rn
                 JObject json;
 
-                if (!File.Exists(exeDir + "\\repos\\nmlgc\\base_tsa\\versions.js"))
+                if (!File.Exists(workingDir + "\\repos\\nmlgc\\base_tsa\\versions.js"))
                 {
                     using (WebClient client = new WebClient())
-                        client.DownloadFile("https://mirrors.thpatch.net/nmlgc/base_tsa/versions.js", exeDir + "\\repos\\nmlgc\\base_tsa\\versions.js");
+                        client.DownloadFile("https://mirrors.thpatch.net/nmlgc/base_tsa/versions.js", workingDir + "\\repos\\nmlgc\\base_tsa\\versions.js");
                 }
-                if (!File.Exists(exeDir + "\\repos\\nmlgc\\base_tasofro\\versions.js"))
+                if (!File.Exists(workingDir + "\\repos\\nmlgc\\base_tasofro\\versions.js"))
                 {
                     using (WebClient client = new WebClient())
-                        client.DownloadFile("https://mirrors.thpatch.net/nmlgc/base_tasofro/versions.js", exeDir + "\\repos\\nmlgc\\base_tasofro\\versions.js");
+                        client.DownloadFile("https://mirrors.thpatch.net/nmlgc/base_tasofro/versions.js", workingDir + "\\repos\\nmlgc\\base_tasofro\\versions.js");
                 }
 
                 List<byte[]> exeHashes = new List<byte[]>();
 
                 //Compile list of all hashes
 
-                json = JObject.Parse(File.ReadAllText(exeDir + "\\repos\\nmlgc\\base_tsa\\versions.js"));
+                json = JObject.Parse(File.ReadAllText(workingDir + "\\repos\\nmlgc\\base_tsa\\versions.js"));
                 JObject h = json["hashes"].Value<JObject>();
                 foreach (JProperty prop in h.Children<JProperty>())
                 {
@@ -916,7 +916,7 @@ namespace ThPatchConfig
                     exeHashes.Add(buffer);
                 }
 
-                json = JObject.Parse(File.ReadAllText(exeDir + "\\repos\\nmlgc\\base_tasofro\\versions.js"));
+                json = JObject.Parse(File.ReadAllText(workingDir + "\\repos\\nmlgc\\base_tasofro\\versions.js"));
                 h = json["hashes"].Value<JObject>();
                 foreach (JProperty prop in h.Children<JProperty>())
                 {
@@ -1031,6 +1031,47 @@ namespace ThPatchConfig
 
                 SaveGameList();
                 UpdateGameList();
+            }
+        }
+
+        string DetectThCrap(string dir)
+        {
+            string d = dir;
+            if (!File.Exists(dir + "\\bin\\thcrap_loader.exe"))
+            {
+                if (MessageBox.Show("Could not detect thcrap in this directory." +
+                                 "\nWould you like to select a different directory?" +
+                               "\n\nThis folder would be the root folder, where the folders \"bin\", \"config\", and \"repos\" are.",
+                                    "ThPatch Config", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    FolderBrowserDialog open = new FolderBrowserDialog();
+                    open.SelectedPath = dir;
+                    if (open.ShowDialog() == DialogResult.OK)
+                    {
+                        d = DetectThCrap(open.SelectedPath);
+                    }
+                    else
+                    {
+                        d = workingDir;
+                    }
+                }
+                else
+                {
+                    d = workingDir;
+                }
+            }
+            return d;
+        }
+
+        private void changeWorkingDir_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog open = new FolderBrowserDialog();
+            open.SelectedPath = workingDir;
+            if (open.ShowDialog() == DialogResult.OK)
+            {
+                workingDir = DetectThCrap(open.SelectedPath);
+
+                File.WriteAllText(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + "\\workingdir.txt", workingDir);
             }
         }
     }
