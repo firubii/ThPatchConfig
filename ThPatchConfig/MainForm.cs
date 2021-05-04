@@ -104,7 +104,11 @@ namespace ThPatchConfig
                 r.Title = json["title"].Value<string>();
                 r.RepoType = RepositoryType.Online;
 
-                r.Contact = json["contact"].Value<string>();
+                if (json.ContainsKey("contact"))
+                    r.Contact = json["contact"].Value<string>();
+                else 
+                    r.Contact = "";
+
                 r.Id = json["id"].Value<string>();
 
                 if (!Directory.Exists(workingDir + "\\repos\\" + r.Id))
