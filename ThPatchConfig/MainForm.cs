@@ -368,8 +368,8 @@ namespace ThPatchConfig
                     JObject json = JObject.Parse(File.ReadAllText(files[i]));
 
                     config.Name = Path.GetFileNameWithoutExtension(files[i]);
-                    config.Console = json["console"].Value<bool>();
-                    config.DatDump = json["dat_dump"].Value<bool>();
+                    config.Console = json["console"] != null ? json["console"].Value<bool>() : false;
+                    config.DatDump = json["dat_dump"] != null ? json["dat_dump"].Value<bool>() : false;
 
                     List<string> patchList = new List<string>();
                     JArray patches = json["patches"].Value<JArray>();
